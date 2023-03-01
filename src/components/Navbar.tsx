@@ -1,11 +1,17 @@
+import axios from 'axios';
 import React,{useState} from 'react'
 import {BsPenFill} from "react-icons/bs"
 export default function Navbar() {
+  type task={
+    value:string;
+  }
     const [value,setValue]=useState<string>("")
-  const [tasks,setTasks]=useState<string[]>([])
+  const [tasks,setTasks]=useState<task>({
+    value:value
+  })
     const hanlecreateList=():void=>{
         if(value.length!==0){
-            setTasks([...tasks,value])
+           axios.post("http://localhost:9000",tasks)
         }
         else{
             alert("enter something than add it to the list")
