@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Pusher from 'pusher-js'
-export default function main() {
+import axios from 'axios'
+export default function Main() {
   type task=({
     value:string
   })
@@ -10,6 +11,18 @@ export default function main() {
   const pusher = new Pusher('c09fb326cffcc4b496bb', {
     cluster: 'eu'
   });
+  useEffect(()=>{
+    const hanldePreviousTasks=async()=>{
+      try{
+        const res=await axios.get("http://localhost:9000")
+        console.log(1)
+        console.log(res);
+      }catch(err){
+        console.log(err)
+      }
+    }
+    hanldePreviousTasks()
+  })
   useEffect(()=>{
     var channel = pusher.subscribe('my-channel');
     channel.bind('my-event', function(data:any) {
