@@ -2,18 +2,12 @@ import React, { useEffect, useState } from 'react'
 import Pusher from 'pusher-js'
 import axios from 'axios'
 export default function Main() {
-  type task=([{
-    _id:string,
-    value:string,
-    __v:string
-
-  }])
   type data={
     _id:string,
     value:string,
     __v:string
   }
-  const [tasks,setTasks]=useState<task>([{
+  const [tasks,setTasks]=useState<data[]>([{
     _id:"",
     value:"",
     __v:""
@@ -36,15 +30,15 @@ export default function Main() {
     });
     var channel = pusher.subscribe('my-channel');
     channel.bind('my-event', function(data:data) {
-      console.log(data)
-      setTasks([...tasks])
+      setTasks([...tasks,data])
+      console.log(tasks)
 
     });
     return ()=>{
       channel.unbind_all()
       channel.unsubscribe();
     }
-  },[])
+  },[tasks])
   return (
     <div>
 
