@@ -41,9 +41,9 @@ app.get("/",async(req,res)=>{
 
 
 const pusher = new Pusher({
-  appId: "1561703",
-  key: "c09fb326cffcc4b496bb",
-  secret: "082cc7e77f4191b63dc7",
+  appId: process.env.PUSHER_APP_ID,
+  key: process.env.PUSHER_KEY,
+  secret: process.env.PUSHER_SECRET,
   cluster: "eu",
   useTLS: true
 });

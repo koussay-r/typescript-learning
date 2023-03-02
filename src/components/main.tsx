@@ -15,7 +15,6 @@ export default function Main() {
     const hanldePreviousTasks=async()=>{
       try{
         const res=await axios.get("http://localhost:9000")
-        console.log(1)
         console.log(res);
       }catch(err){
         console.log(err)
