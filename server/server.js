@@ -30,8 +30,8 @@ app.post("/create",async(req,res)=>{
 
 app.get("/",async(req,res)=>{
     try{
+        
         const ress=await taskmodel.find()
-        console.log(ress)
         res.status(200).send(ress)
     }
     catch(err){
@@ -57,7 +57,8 @@ db.once("open",()=>{
             const task=change.fullDocument;
             pusher.trigger("my-channel", "my-event", {
                 _id:task._id,
-              value: task.value
+              value: task.value,
+              __v:task.__v
             });
             
         }
