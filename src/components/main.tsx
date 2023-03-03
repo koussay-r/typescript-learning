@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Pusher from 'pusher-js'
 import axios from 'axios'
+import {RiDeleteBin2Line} from 'react-icons/ri'
 export default function Main() {
   type data={
     _id:string,
@@ -18,8 +19,9 @@ export default function Main() {
       try{
         const res=await axios.get("http://localhost:9000")
         setTasks(res.data);
+        console.log(tasks)
       }catch(err){
-        console.log(err)
+        console.log(err);
       }
     }
     hanldePreviousTasks()
@@ -31,7 +33,6 @@ export default function Main() {
     var channel = pusher.subscribe('my-channel');
     channel.bind('my-event', function(data:data) {
       setTasks([...tasks,data])
-      console.log(tasks)
 
     });
     return ()=>{
@@ -41,7 +42,15 @@ export default function Main() {
   },[tasks])
   return (
     <div>
-
+      {
+        tasks.map(item=>{
+          return (
+            <div key={item._id} className="w-[50%] mx-auto pt-[30px]  flex justify-center bg-white border h-[100px] shadow mt-2 mb-2 rounded-md" >
+              <p className='text-center pr-3 '>{item.value}</p><RiDeleteBin2Line className='mt-[6px] cursor-pointer'/>
+            </div>
+          )
+        })
+      }
     </div>
   )
 }
