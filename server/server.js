@@ -39,7 +39,15 @@ app.get("/",async(req,res)=>{
     }
 })
 
-
+app.delete("/:id",async(req,res)=>{
+    try{
+        const ress=await taskmodel.findByIdAndDelete({_id:req.params.id})
+        res.status(202).send(ress)
+    }
+    catch(err){
+        console.log(err)
+    }
+})
 const pusher = new Pusher({
   appId: process.env.PUSHER_APP_ID,
   key: process.env.PUSHER_KEY,
@@ -61,6 +69,13 @@ db.once("open",()=>{
               __v:task.__v
             });
             
+        }
+        else if(change.operationType=="delete"){
+            pusher.trigger("my-channel", "my-event", {
+                _id:"",
+              value:"",
+              __v:""
+            });
         }
         else{
             console.log(err)
