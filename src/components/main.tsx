@@ -3,6 +3,7 @@ import Pusher from 'pusher-js'
 import axios from 'axios'
 import {RiDeleteBin2Line} from 'react-icons/ri'
 export default function Main() {
+  const [idDelete,setIddelete]=useState<string>("")
   type data={
     _id:string,
     value:string,
@@ -14,12 +15,18 @@ export default function Main() {
     __v:""
 
   }])
+  const [PrevTasks,setPrevTasks]=useState<data[]>([{
+    _id:"",
+    value:"",
+    __v:""
+
+  }])
+  
   useEffect(()=>{
     const hanldePreviousTasks=async()=>{
       try{
         const res=await axios.get("http://localhost:9000")
         setTasks(res.data);
-        console.log(tasks)
       }catch(err){
         console.log(err);
       }
@@ -27,22 +34,43 @@ export default function Main() {
     hanldePreviousTasks()
   },[])
   useEffect(()=>{
+    const hnaldePrevArray=()=>{
+      tasks.map(item=>{
+        return(
+          <>
+          {item._id!==idDelete&&
+            setPrevTasks([...PrevTasks,item])
+          }
+          </>
+        )
+      })
+    }
     const pusher = new Pusher('c09fb326cffcc4b496bb', {
       cluster: 'eu'
     });
     var channel = pusher.subscribe('my-channel');
     channel.bind('my-event', function(data:data) {
       console.log(data)
-      setTasks([...tasks,data])
+      if(data._id===""){
+        hnaldePrevArray()
+        setTasks(PrevTasks)
+        console.log(tasks)
+      }
+      else{
+        setTasks([...tasks,data])
+        console.log(tasks)
+
+      }
 
     });
     return ()=>{
       channel.unbind_all()
       channel.unsubscribe();
     }
-  },[tasks])
+  },[tasks,idDelete,PrevTasks])
   const hanldeDelete=async(_id:string)=>{
     try{
+      setIddelete(_id)
       await axios.delete(`http://localhost:9000/${_id}`)
     }
     catch(err){
